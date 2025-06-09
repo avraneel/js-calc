@@ -1,1 +1,3 @@
 # js-calc
+
+Calculator Project
