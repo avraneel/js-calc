@@ -1,21 +1,17 @@
 "use strict";
 
-function add(num1, num2) {
-    return num1 + num2;
+const numButtonList = document.querySelectorAll(".num-button");
+let num1 = 0;
+
+for (const numButton of numButtonList) {
+    numButton.addEventListener("click", () => {
+        const num = numButton.textContent;
+        setNum(num);
+    });
 }
 
-function subtract(num1, num2) {
-    return num1 - num2;
-}
-
-function multiply(num1, num2) {
-    return num1 * num2;
-}
-
-function divide(num1, num2) {
-    return num1/num2;
-}
-
-function operate(num1, op, num2) {
-    
+function setNum(num) {
+    const display = document.querySelector(".display");
+    num1 = num;
+    display.textContent = num;
 }
