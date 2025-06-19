@@ -27,7 +27,7 @@ body {
     display: flex;
 }
 
-.num-button, .op-button, .equals, .cls {
+.num-button, .op-button, .equals {
     background-color: #e2fdff;
     margin: 1rem;
     height: 5rem;
@@ -39,7 +39,7 @@ body {
     transition-duration: 0.2s;
 }
 
-.num-button:hover, .op-button:hover, .equals:hover, .cls:hover {
+.num-button:hover, .op-button:hover, .equals:hover {
     background-color: #5465FF;
     color: #e2fdff;
     border: none;
@@ -57,4 +57,5 @@ body {
     padding: 1em;
     border-radius: 80px;
     text-align: right;
+    min-height: 2em;
 }
