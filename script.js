@@ -4,7 +4,7 @@ const arithOperationSet = ["+", "-", "*", "/"];
 
 let operation = "";
 let numBuffer = "";
-let numArray = [];
+let numMemory = [];
 
 // adding listener for each num buttons
 const numButtonList = document.querySelectorAll(".num-button");
@@ -33,7 +33,7 @@ for(const opButton of opButtonList) {
 
         /* When we press an operation button, store the current numeric buffer
            into the array and reset the numeric buffer to 0 */
-        numArray.push(parseInt(numBuffer));
+        numMemory.push(parseInt(numBuffer));
         numBuffer = "";
 
         if(arithOperationSet.includes(op)) {
@@ -43,7 +43,7 @@ for(const opButton of opButtonList) {
         }
         else if(op === "C") {
             clearScreen();
-            for(let num of numArray) {
+            for(let num of numMemory) {
                 console.log(num);
             }
         }
@@ -60,12 +60,12 @@ function displayOperationOnScreen(op) {
 
 function clearScreen() {
     const display = document.querySelector(".display");
-    numArray = [];
+    numMemory = [];
     numBuffer = "";
     display.textContent = " ";
 }
 
-for(let num of numArray) {
+for(let num of numMemory) {
     console.log(num);
 }
 
@@ -75,23 +75,23 @@ function evalulate() {
 
     switch (operation) {
         case "+":
-            result = numArray.shift() + numArray.shift();
+            result = numMemory.shift() + numMemory.shift();
             display.textContent = result;
             console.log("add"); 
             break;
         case "-":
-            result = numArray.shift() - numArray.shift();
+            result = numMemory.shift() - numMemory.shift();
             display.textContent = result;
             console.log("subtract");
             break;
         case "*":
-            result = numArray.shift() * numArray.shift();
+            result = numMemory.shift() * numMemory.shift();
             display.textContent = result;
             console.log("multiply");
             break;
         case "/":
-            let num1 = numArray.shift();
-            let num2 = numArray.shift();
+            let num1 = numMemory.shift();
+            let num2 = numMemory.shift();
             console.log(num2);
             if(num2 == 0) {
                 display.textContent = "Cannot divide by 0"
