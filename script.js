@@ -1,30 +1,25 @@
 "use strict";
 
 const arithOperationSet = ["+", "-", "*", "/"];
+const operationSet = ["+", "-", "*", "/", "C", "="];
+
+const numButtonList = document.querySelectorAll(".num-button");
+const opButtonList = document.querySelectorAll(".op-button");
+const display = document.querySelector(".display");
 
 let operation = "";
 let numBuffer = "";
-let numMemory = [];
+let numArray = [];
 
 // adding listener for each num buttons
-const numButtonList = document.querySelectorAll(".num-button");
-
 for (const numButton of numButtonList) {
     numButton.addEventListener("click", () => {
         const num = numButton.textContent;
-        displayNumOnScreen(num);
+        display.textContent += num;
         numBuffer += num;
+        console.log(numArray);
     });
 }
-
-function displayNumOnScreen(num) {
-    const display = document.querySelector(".display");
-    /* if we press multiple buttons, then it will build a string and then 
-        display it */
-    display.textContent += num;
-}
-
-const opButtonList = document.querySelectorAll(".op-button");
 
 // adding listener for each operation button
 for(const opButton of opButtonList) {
@@ -33,87 +28,84 @@ for(const opButton of opButtonList) {
 
         /* When we press an operation button, store the current numeric buffer
            into the array and reset the numeric buffer to 0 */
-        numMemory.push(parseInt(numBuffer));
-        numBuffer = "";
+        if(numBuffer != "") {
+            numArray.push(parseInt(numBuffer));
+            numBuffer = "";
+        }
+
+        console.log(numArray);
 
         if(arithOperationSet.includes(op)) {
-            // Operation is one of the 4 arithmetic operations
 
             /* We press an arithmetic button second time when we already have
                an existing operation */
-            
-            if(numMemory.length == 2) {
-                let temp = evalulate();
-                const display = document.querySelector(".display");
-                display.textContent = temp;
-                numMemory.push(temp);
+            if(numArray.length == 2) {
+                let result = evalulate(); 
+                if(result == "ERROR") {
+                    clearScreen();
+                    return;
+                }
+                else {
+                    display.textContent = result;
+                    numArray.push(result);
+                } 
             }
-            displayOperationOnScreen(op);
+
+            display.textContent += " " + op + " ";
             operation = op;
             
         }
         else if(op === "C") {
             clearScreen();
-            for(let num of numMemory) {
-                console.log(num);
-            }
         }
         else if(op === "=") {
-            evalulate();
+            let result = evalulate();
+            if(result == "ERROR") {
+                clearScreen();
+                return;
+            }
+            else {
+                display.textContent = result
+                numBuffer = result.toString();
+                console.log(numArray);
+            }
         }
     });
 }
 
-function displayOperationOnScreen(op) {
-    const display = document.querySelector(".display");
-    display.textContent += " " + op + " ";
-}
-
 function clearScreen() {
-    const display = document.querySelector(".display");
-    numMemory = [];
+    numArray = [];
     numBuffer = "";
     display.textContent = " ";
 }
 
-for(let num of numMemory) {
-    console.log(num);
-}
-
 function evalulate() {
     let result = NaN;
-    const display = document.querySelector(".display");
 
     switch (operation) {
         case "+":
-            result = numMemory.shift() + numMemory.shift();
-            display.textContent = result;
-            console.log("add"); 
+            result = numArray.shift() + numArray.shift();
             break;
         case "-":
-            result = numMemory.shift() - numMemory.shift();
-            display.textContent = result;
-            console.log("subtract");
+            result = numArray.shift() - numArray.shift();
             break;
         case "*":
-            result = numMemory.shift() * numMemory.shift();
-            display.textContent = result;
-            console.log("multiply");
+            result = numArray.shift() * numArray.shift();
             break;
         case "/":
-            let num1 = numMemory.shift();
-            let num2 = numMemory.shift();
+            let num1 = numArray.shift();
+            let num2 = numArray.shift();
             console.log(num2);
             if(num2 == 0) {
-                display.textContent = "Cannot divide by 0"
+                alert("Cannot divide by 0");
+                return "ERROR";
             }
             else {
                 result = num1 / num2;
-                display.textContent = result;
             }
-            console.log("divide");
             break;
         default:
+            display.textContent = numBuffer;
             break;
     }
     return result;
