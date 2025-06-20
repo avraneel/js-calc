@@ -12,6 +12,7 @@ let numBuffer = "";
 let numArray = [];
 
 let duplicateOpFlag = false;
+let isPreviousEquals = false;
 
 // adding listener for each num buttons
 for (const numButton of numButtonList) {
@@ -21,6 +22,12 @@ for (const numButton of numButtonList) {
             clearScreen();
             return;
         }
+
+        if(isPreviousEquals) {
+            clearScreen();
+            isPreviousEquals = false;
+        }
+
         const num = numButton.textContent;
         numBuffer += num;
         display.textContent += num;
@@ -48,10 +55,8 @@ for(const opButton of opButtonList) {
         /* When we press an operation button, store the current numeric buffer
            into the array and reset the numeric buffer to 0 */
         if(numBuffer != "") {
-            console.log("storing");
             numArray.push(parseInt(numBuffer));
             numBuffer = "";
-            console.log(numArray);
         }
 
         if(arithOperationSet.includes(op)) {
@@ -85,6 +90,7 @@ for(const opButton of opButtonList) {
                 display.textContent += " " + op + " ";
             }
             duplicateOpFlag = true;
+            isPreviousEquals = false;
         }
         else if(op === "C") {
             clearScreen();
@@ -109,6 +115,7 @@ for(const opButton of opButtonList) {
                 numBuffer = result.toString();
                 console.log(numBuffer);
             }
+            isPreviousEquals = true;
         }
     });
 }
@@ -118,6 +125,7 @@ function clearScreen() {
     numBuffer = "";
     display.textContent = "";
     duplicateOpFlag = false;
+    isPreviousEquals = false;
 }
 
 function evalulate() {
