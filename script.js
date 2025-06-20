@@ -1,7 +1,7 @@
 "use strict";
 
 const arithOperationSet = ["+", "-", "*", "/"];
-const operationSet = ["+", "-", "*", "/", "C", "="];
+const maxLength = 20;
 
 const numButtonList = document.querySelectorAll(".num-button");
 const opButtonList = document.querySelectorAll(".op-button");
@@ -11,19 +11,33 @@ let operation = "";
 let numBuffer = "";
 let numArray = [];
 
+let duplicateOpFlag = false;
+
 // adding listener for each num buttons
 for (const numButton of numButtonList) {
     numButton.addEventListener("click", () => {
+        if(display.textContent.length > maxLength) {
+            alert("Out of Bounds");
+            clearScreen();
+            return;
+        }
         const num = numButton.textContent;
-        display.textContent += num;
         numBuffer += num;
-        console.log(numArray);
+        display.textContent += num;
+        duplicateOpFlag = false;
     });
 }
 
 // adding listener for each operation button
 for(const opButton of opButtonList) {
     opButton.addEventListener("click", function () {
+
+        if(display.textContent.length >= maxLength) {
+            alert("Out of Bounds");
+            clearScreen();
+            return;
+        }
+
         const op = opButton.textContent;
 
         /* When we press an operation button, store the current numeric buffer
@@ -32,8 +46,6 @@ for(const opButton of opButtonList) {
             numArray.push(parseInt(numBuffer));
             numBuffer = "";
         }
-
-        console.log(numArray);
 
         if(arithOperationSet.includes(op)) {
 
@@ -51,9 +63,21 @@ for(const opButton of opButtonList) {
                 } 
             }
 
-            display.textContent += " " + op + " ";
             operation = op;
-            
+
+            if(duplicateOpFlag) {
+
+                /* If we press consecutive op buttons then the
+                display will update with the latest op button pressed */
+                let copyString = display.textContent;
+                console.log(copyString);
+                let newString = copyString.slice(0,-2) + op + " ";
+                console.log(newString)
+                display.textContent = newString;
+            }
+            else {
+                display.textContent += " " + op + " ";
+            }
         }
         else if(op === "C") {
             clearScreen();
@@ -65,11 +89,12 @@ for(const opButton of opButtonList) {
                 return;
             }
             else {
-                display.textContent = result
+                display.textContent = result;
                 numBuffer = result.toString();
                 console.log(numArray);
             }
         }
+        duplicateOpFlag = true;
     });
 }
 
@@ -108,6 +133,12 @@ function evalulate() {
             display.textContent = numBuffer;
             break;
     }
-    return result;
+    if(result.toString().length > maxLength) {
+        alert("Out of bounds");
+        return "ERROR";
+    }
+    else {
+        return result;
+    }
 }
 
