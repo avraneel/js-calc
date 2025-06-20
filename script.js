@@ -38,8 +38,19 @@ for(const opButton of opButtonList) {
 
         if(arithOperationSet.includes(op)) {
             // Operation is one of the 4 arithmetic operations
+
+            /* We press an arithmetic button second time when we already have
+               an existing operation */
+            
+            if(numMemory.length == 2) {
+                let temp = evalulate();
+                const display = document.querySelector(".display");
+                display.textContent = temp;
+                numMemory.push(temp);
+            }
             displayOperationOnScreen(op);
             operation = op;
+            
         }
         else if(op === "C") {
             clearScreen();
@@ -105,5 +116,6 @@ function evalulate() {
         default:
             break;
     }
+    return result;
 }
 
