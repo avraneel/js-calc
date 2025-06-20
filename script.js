@@ -32,6 +32,11 @@ for (const numButton of numButtonList) {
 for(const opButton of opButtonList) {
     opButton.addEventListener("click", function () {
 
+        if(display.textContent === "") {
+            return;
+        }
+
+
         if(display.textContent.length >= maxLength) {
             alert("Out of Bounds");
             clearScreen();
@@ -43,8 +48,10 @@ for(const opButton of opButtonList) {
         /* When we press an operation button, store the current numeric buffer
            into the array and reset the numeric buffer to 0 */
         if(numBuffer != "") {
+            console.log("storing");
             numArray.push(parseInt(numBuffer));
             numBuffer = "";
+            console.log(numArray);
         }
 
         if(arithOperationSet.includes(op)) {
@@ -65,10 +72,9 @@ for(const opButton of opButtonList) {
 
             operation = op;
 
-            if(duplicateOpFlag) {
-
-                /* If we press consecutive op buttons then the
+            /* If we press consecutive op buttons then the
                 display will update with the latest op button pressed */
+            if(duplicateOpFlag) {
                 let copyString = display.textContent;
                 console.log(copyString);
                 let newString = copyString.slice(0,-2) + op + " ";
@@ -78,11 +84,21 @@ for(const opButton of opButtonList) {
             else {
                 display.textContent += " " + op + " ";
             }
+            duplicateOpFlag = true;
         }
         else if(op === "C") {
             clearScreen();
         }
         else if(op === "=") {
+            /* If we press consecutive op buttons and the last button
+               is = then the display will update with just the number */ 
+            if(duplicateOpFlag || numArray.length == 1) {
+                operation = op;
+
+                /* Pressing = will only display the number so we can make
+                   the flag false */
+                duplicateOpFlag = false;
+            }
             let result = evalulate();
             if(result == "ERROR") {
                 clearScreen();
@@ -91,17 +107,17 @@ for(const opButton of opButtonList) {
             else {
                 display.textContent = result;
                 numBuffer = result.toString();
-                console.log(numArray);
+                console.log(numBuffer);
             }
         }
-        duplicateOpFlag = true;
     });
 }
 
 function clearScreen() {
     numArray = [];
     numBuffer = "";
-    display.textContent = " ";
+    display.textContent = "";
+    duplicateOpFlag = false;
 }
 
 function evalulate() {
@@ -126,11 +142,11 @@ function evalulate() {
                 return "ERROR";
             }
             else {
-                result = num1 / num2;
+                result = Math.floor(num1 / num2);
             }
             break;
         default:
-            display.textContent = numBuffer;
+            result = numArray.shift();
             break;
     }
     if(result.toString().length > maxLength) {
